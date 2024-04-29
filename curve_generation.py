@@ -13,6 +13,9 @@ def von_haack(z) :
 
     return rs
 
+def cylinder(z) : 
+    return cfg.R
+
 # Compute a curve taking top and bottom margins into account
 def curve(z) :
 
@@ -23,7 +26,12 @@ def curve(z) :
         z = np.array(z).astype('float')
 
     z_conditions = [z < cfg.top_margin, (cfg.top_margin <= z) & (z < cfg.L), z >= cfg.L]
-    z_func = [von_haack(cfg.top_margin), von_haack, von_haack(cfg.L)]
+    # for fairing
+    #z_func = [von_haack(cfg.top_margin), von_haack, von_haack(cfg.L)]
+    # for cylinder
+    z_func = [cylinder(cfg.top_margin), cylinder, cylinder(cfg.L)]
+    
+
     # z NEEDS to be a float or an array of floats
     rs = np.piecewise(z, z_conditions, z_func) 
 

@@ -11,7 +11,7 @@ def plot_toolpath(plot_x, plot_y, plot_z, ax, pass_id) :
         plt.plot(plot_x, plot_y, label='pass no. '+str(pass_id)+' fwd')
     else :
         '''3D plotting trajectory'''
-        ax.plot3D(plot_y, plot_z, plot_x, label='pass no. '+str(pass_id)+' bwd')
+        ax.plot3D(plot_y, plot_z, plot_x, label='pass no. '+str(pass_id))
 def plot_margin_limits(ax) :
 
     xs = [-1.2*cfg.R, 1.2*cfg.R]
@@ -31,33 +31,34 @@ def plot_fairing(ax) :
     z = np.linspace(0, z_max, int(z_max/cfg.step))
     rho = curve_generation.curve(z)
     #print(rho)
-    print('len rho = ', len(rho))
+    #print('len rho = ', len(rho))
 
     #steps around circle from 0 to 2*pi(360degrees)
     #reshape at the end is to be able to use np.dot properly
-    revolve_steps = np.linspace(0, np.pi*2, z_max).reshape(1,z_max)
+    # TODO fix that horsecrap, make it so theta step / resolution is independant from z resolution
+    revolve_steps = np.linspace(0, np.pi*2, int(z_max/cfg.step)).reshape(1,int(z_max/cfg.step))
 
     theta = revolve_steps
     #convert rho to a column vector
 
     rho_column = rho.reshape(int(z_max/cfg.step),1)
-    #print('rho', rho)
-    print('type rho', np.shape(rho))
-    #print('rho_column', rho_column)
-    print('type rho_col', np.shape(rho_column))
+    ##print('rho', rho)
+    #print('type rho', np.shape(rho))
+    ##print('rho_column', rho_column)
+    #print('type rho_col', np.shape(rho_column))
     x = rho_column.dot(np.cos(theta))
     y = rho_column.dot(np.sin(theta))
 
     zs, rs = np.meshgrid(z, rho)
-
+    
     ##plotting
     #fig, ax = plt.subplots(subplot_kw=dict(projection='3d'))
     #fig.tight_layout(pad = 0.0)
     #transpose zs or you get a helix not a revolve.
     # you could add rstride = int or cstride = int kwargs to control the mesh density
-    print(len(x))
-    print(len(y))
-    print(len(zs))
+    #print(len(x))
+    #print(len(y))
+    #print(len(zs.T))
     ax.plot_surface(x, y, zs.T, color = 'blue', shade = True, alpha=.2)
 
 global px, py, pz, sc
