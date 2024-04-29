@@ -35,7 +35,7 @@ def gcode_clear() :
 		for var in cfg_vars :
 			f.write(f'; {var} = {getattr(cfg, var)} ')
 		
-		f.write(f';{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_axis_R} (carriage radial position) \n')
+		f.write(f';{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_axis_R} (carriage radial position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
 			
 
 # write single array
