@@ -5,7 +5,7 @@ import numpy as np
 
 # write coordinates arrays
 
-def gcode_write_traj(Ltheta, Lz, Lr, Lomega) :
+def gcode_write_traj(Ltheta, Lz, Lr, Lomega, Lorient) :
 	assert len(Ltheta) == len(Lz) == len(Lr) == len(Lomega) , 'Bad coordinate list size'
 
 	# creating Vz
@@ -17,12 +17,13 @@ def gcode_write_traj(Ltheta, Lz, Lr, Lomega) :
 	#print(f'Z motion for a whole spin : {(360/Lomega[0])*cfg.carriage_speed}')
 
 	with open(cfg.output_file, 'a') as f: 
-		for (theta, Z, R, omega, Vz) in zip(Ltheta, Lz, Lr, Lomega, L_Vz) :
+		for (theta, Z, R, omega, Vz, cur_orient) in zip(Ltheta, Lz, Lr, Lomega, L_Vz, Lorient) :
 			f.write((f"{cfg.gcode_axis_theta}{np.rad2deg(theta)} "
 				f"{cfg.gcode_axis_Z}{Z} "
 #				f"{cfg.gcode_axis_R}{R+cfg.R_offset} "
 				f"{cfg.gcode_speed_omega}{omega} "
-				f"{cfg.gcode_speed_carriage}{Vz}\n"))
+				f"{cfg.gcode_speed_carriage}{Vz} "
+				f"{cfg.gcode_filament_orientation}{cur_orient}\n"))
 	
 def gcode_write_comment(comment) :
 	with open(cfg.output_file, 'a') as f: 
@@ -37,7 +38,8 @@ def gcode_clear() :
 			f.write(f'# {var} = {getattr(cfg, var)} ')
 		
 #		f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_axis_R} (carriage radial position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
-		f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
+		#f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
+		f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) | {cfg.gcode_filament_orientation} (filament orientation in deg) \n')
 			
 
 # write single array

@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
         # writing Gcode
         gcode_editor.gcode_write_comment(f'Pass {i}, Halfpass no. 1')
-        gcode_editor.gcode_write_traj(halfpass, Lz, Lr, Lomega)
+        gcode_editor.gcode_write_traj(halfpass, Lz, Lr, Lomega, [45]*len(halfpass))
 
         plot_x = Lz
         plot_y = Lr*np.cos(halfpass)
@@ -161,12 +161,12 @@ if __name__ == '__main__':
         ax.scatter(plot_y[-1], plot_z[-1], plot_x[-1], color='red', s=50)
         ax.text(plot_y[-1], plot_z[-1], plot_x[-1], f'HP{i}.1 end')
 
-         #H1end = [plot_y[-1], plot_z[-1]]
+        #H1end = [plot_y[-1], plot_z[-1]]
        
         current_theta += np.deg2rad(360+cfg.halfpass_shift)
         
         gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 360 + shift={cfg.halfpass_shift}')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]])
+        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0])
 
         # Return halfpass
         #################
@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
         # writing Gcode
         gcode_editor.gcode_write_comment(f'Pass {i}, Halfpass no. 2')
-        gcode_editor.gcode_write_traj(halfpass, list(reversed(Lz)), list(reversed(Lr)), Lomega)
+        gcode_editor.gcode_write_traj(halfpass, list(reversed(Lz)), list(reversed(Lr)), Lomega, [-45]*len(halfpass))
 
         plot_x = list(reversed(Lz)) # reverse this
         plot_y = Lr*np.cos(halfpass)
@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
         current_theta += np.deg2rad(360)
         gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]]) # Lz[0] cause we're at home
+        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0]) # Lz[0] cause we're at home
 
         # Preparing next pass
         ######################
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         current_theta += np.deg2rad(360) - np.deg2rad(np.rad2deg(current_theta - start_theta)%360) # catch up with pass starting point
         current_theta += np.deg2rad(pass_shift) # add shift
         gcode_editor.gcode_write_comment(f'Pass {i}, executing catch-up to start point AND pass_shift = {cfg.pass_shift}')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]])
+        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0])
         #print('theta après correction : ', np.rad2deg(current_theta)%360)
 
     plt.axvline(x=cfg.top_margin, color='red', linestyle=':')
