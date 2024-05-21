@@ -196,7 +196,7 @@ if __name__ == '__main__':
 
         current_theta += np.deg2rad(360)
         gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]])
+        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]]) # Lz[0] cause we're at home
 
         # Preparing next pass
         ######################
@@ -210,7 +210,7 @@ if __name__ == '__main__':
         current_theta += np.deg2rad(360) - np.deg2rad(np.rad2deg(current_theta - start_theta)%360) # catch up with pass starting point
         current_theta += np.deg2rad(pass_shift) # add shift
         gcode_editor.gcode_write_comment(f'Pass {i}, executing catch-up to start point AND pass_shift = {cfg.pass_shift}')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]])
+        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]])
         #print('theta après correction : ', np.rad2deg(current_theta)%360)
 
     plt.axvline(x=cfg.top_margin, color='red', linestyle=':')

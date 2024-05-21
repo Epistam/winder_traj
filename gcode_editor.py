@@ -18,14 +18,15 @@ def gcode_write_traj(Ltheta, Lz, Lr, Lomega) :
 
 	with open(cfg.output_file, 'a') as f: 
 		for (theta, Z, R, omega, Vz) in zip(Ltheta, Lz, Lr, Lomega, L_Vz) :
-			f.write((f"G1 {cfg.gcode_axis_theta}{np.rad2deg(theta)} "
+			f.write((f"{cfg.gcode_axis_theta}{np.rad2deg(theta)} "
 				f"{cfg.gcode_axis_Z}{Z} "
+#				f"{cfg.gcode_axis_R}{R+cfg.R_offset} "
 				f"{cfg.gcode_speed_omega}{omega} "
 				f"{cfg.gcode_speed_carriage}{Vz}\n"))
 	
 def gcode_write_comment(comment) :
 	with open(cfg.output_file, 'a') as f: 
-		f.write(f';{comment}\n')
+		f.write(f'#{comment}\n')
 
 def gcode_clear() :
 	with open(cfg.output_file, 'w') as f :
@@ -33,9 +34,10 @@ def gcode_clear() :
 		cfg_vars = [item for item in dir(cfg) if not item.startswith("__")]
 
 		for var in cfg_vars :
-			f.write(f'; {var} = {getattr(cfg, var)} ')
+			f.write(f'# {var} = {getattr(cfg, var)} ')
 		
-		f.write(f';{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_axis_R} (carriage radial position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
+#		f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_axis_R} (carriage radial position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
+		f.write(f'#{cfg.gcode_axis_theta} (spindle angle) | {cfg.gcode_axis_Z} (carriage longitudinal position) | {cfg.gcode_speed_omega} (spindle speed in deg/s) | {cfg.gcode_speed_carriage} (carriage speed in mm/s) \n')
 			
 
 # write single array

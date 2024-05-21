@@ -3,26 +3,29 @@ import numpy as np
 # Tube / fairing parameters
 ######################
 # Mandrel settings
-L = 2000. # longueur en mm
+L = 600. # longueur en mm
 R = 80. # rayon en mm
 # Fairing settings (if applicable)
 C = .66 # paramètre de von Karman 
 
 top_margin = 0. # useless for cylinders
 bot_margin = 0. # distance from Z origin
-cyl_Z_offset = 100.
+cyl_Z_offset = 0.
 
-# Fiber orientation
+# Fiber orientation (uncomment whichever mode is wanted)
 ####################
-# Orientation setting
-#orient = 45 # fiber orientation in degrees
-# OR step setting
-filament_step = 503 # in mm
-orient = np.rad2deg(np.deg2rad(90)-np.arctan((2*np.pi*R)/filament_step))
+# Orientation setting (X winding)
+orient = 45 # fiber orientation in degrees
+# Step setting (hoop winding)
+#filament_step = 100 # in mm
+#orient = np.rad2deg(np.arcsin(filament_step / (2*np.pi*R)))
+
+# legacy and wrong
+#orient = np.rad2deg(np.deg2rad(90)-np.arctan((2*np.pi*R)/filament_step))
 
 # Speeds / feeds
 ################
-carriage_speed = 10 # carriage speed acts a speed multiplicator applied to both omega and Vz, not changing their ratio
+carriage_speed = 30 # carriage speed acts a speed multiplicator applied to both omega and Vz, not changing their ratio
 om_func = lambda r : Vtan/r
 Vtan = np.tan(np.deg2rad(90-orient)) # Vtan(z) ; implicitely, Vz = 1mm/s
 
@@ -41,21 +44,27 @@ Vtan = np.tan(np.deg2rad(90-orient)) # Vtan(z) ; implicitely, Vz = 1mm/s
 #####################
 halfpass_shift = 180 # shift (deg) between halfpass FWD and halfpass BWD
 pass_shift = 45 # shift en degrès à la fin de chaque passe
-pass_count = 1 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
-#pass_count = int(360/pass_shift) #automated calculation for rendering all passes
+#pass_count = 8 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
+pass_count = int(360/pass_shift) #automated calculation for rendering all passes
 
 # Point density
 ################
-step = 20 # Z step between points in mm
+step = 3 # Z step between points in mm
+R_offset = 0
 
 # Gcode generation
 ###################
 output_file = 'test.gcode'
+
 gcode_axis_theta = 'A'
+gcode_speed_omega = 'S'
+
 gcode_axis_Z = 'B'
-gcode_axis_R = 'C'
-gcode_speed_omega = 'E'
 gcode_speed_carriage = 'F'
+
+gcode_filament_orientation = 'D'
+
+#gcode_axis_R = 'C'
 
 # Misc / irrelevant
 #######
