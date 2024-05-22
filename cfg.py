@@ -47,6 +47,8 @@ pass_shift = 45 # shift en degrès à la fin de chaque passe
 #pass_count = 8 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
 pass_count = int(360/pass_shift) #automated calculation for rendering all passes
 
+fwd_orient = 45
+
 # Point density
 ################
 step = 3 # Z step between points in mm

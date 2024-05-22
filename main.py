@@ -139,17 +139,20 @@ if __name__ == '__main__':
         halfpass = get_theta(Lomega)
 
         # writing Gcode
+        gcode_editor.gcode_write_comment(f'Moving hand to FWD position')
+        gcode_editor.gcode_write_traj([halfpass[0]], [Lz[0]], [Lr[0]], [Lomega[0]], [cfg.fwd_orient]) # using first coordinates
         gcode_editor.gcode_write_comment(f'Pass {i}, Halfpass no. 1')
-        gcode_editor.gcode_write_traj(halfpass, Lz, Lr, Lomega, [45]*len(halfpass))
+        gcode_editor.gcode_write_traj(halfpass, Lz, Lr, Lomega, [cfg.fwd_orient]*len(halfpass))
+        gcode_editor.gcode_write_comment(f'Moving hand to neutral')
+        gcode_editor.gcode_write_traj([halfpass[-1]], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0]) # using last coordinates
 
+        # plotting halfpass
         plot_x = Lz
         plot_y = Lr*np.cos(halfpass)
         plot_z = Lr*np.sin(halfpass)
-
         # distance tangentielle parcourue pour un pas en Z
         d_tan = ((np.rad2deg(halfpass[2] - halfpass[1]))*(2*np.pi*cfg.R))/360
         print('=DEBUG= fiber orientation', np.rad2deg(np.arctan(cfg.step/d_tan)))
-        
         plotting.plot_toolpath(plot_x, plot_y, plot_z, ax, i)
         #plotting.plot_toolpath_points(plot_x, plot_y, plot_z, ax, fig, i)
         ax.scatter(plot_y[0], plot_z[0], plot_x[0], color='green', s=50)
@@ -163,22 +166,26 @@ if __name__ == '__main__':
 
         #H1end = [plot_y[-1], plot_z[-1]]
        
+
+       # Inter-halfpass stuff
+       ##################
         current_theta += np.deg2rad(360+cfg.halfpass_shift)
         
         gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 360 + shift={cfg.halfpass_shift}')
         gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0])
+        gcode_editor.gcode_write_comment(f'Moving hand to BWD position')
+        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [-cfg.fwd_orient])
 
         # Return halfpass
         #################
 
         # Relevant coordinates : TODO
 
-
         halfpass = get_theta(Lomega) # not this
 
         # writing Gcode
         gcode_editor.gcode_write_comment(f'Pass {i}, Halfpass no. 2')
-        gcode_editor.gcode_write_traj(halfpass, list(reversed(Lz)), list(reversed(Lr)), Lomega, [-45]*len(halfpass))
+        gcode_editor.gcode_write_traj(halfpass, list(reversed(Lz)), list(reversed(Lr)), Lomega, [-cfg.fwd_orient]*len(halfpass))
 
         plot_x = list(reversed(Lz)) # reverse this
         plot_y = Lr*np.cos(halfpass)
@@ -194,6 +201,8 @@ if __name__ == '__main__':
 
         #print('angle entre HP1end et HP2start :',  get_angle(H1end, [0,0], [plot_y[-1], plot_z[-1]]))
 
+        gcode_editor.gcode_write_comment(f'Moving hand to neutral')
+        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0]) # using last coordinates
         current_theta += np.deg2rad(360)
         gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
         gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0]) # Lz[0] cause we're at home

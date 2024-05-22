@@ -6,7 +6,7 @@ import numpy as np
 # write coordinates arrays
 
 def gcode_write_traj(Ltheta, Lz, Lr, Lomega, Lorient) :
-	assert len(Ltheta) == len(Lz) == len(Lr) == len(Lomega) , 'Bad coordinate list size'
+	assert len(Ltheta) == len(Lz) == len(Lr) == len(Lomega) == len(Lorient), 'Bad coordinate list size'
 
 	# creating Vz
 	L_Vz = [s for s in [cfg.carriage_speed]*len(Lomega)]
