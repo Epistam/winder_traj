@@ -143,8 +143,8 @@ if __name__ == '__main__':
         gcode_editor.gcode_write_traj([halfpass[0]], [Lz[0]], [Lr[0]], [Lomega[0]], [cfg.fwd_orient]) # using first coordinates
         gcode_editor.gcode_write_comment(f'Pass {i}, Halfpass no. 1')
         gcode_editor.gcode_write_traj(halfpass, Lz, Lr, Lomega, [cfg.fwd_orient]*len(halfpass))
-        gcode_editor.gcode_write_comment(f'Moving hand to neutral')
-        gcode_editor.gcode_write_traj([halfpass[-1]], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0]) # using last coordinates
+        #gcode_editor.gcode_write_comment(f'Moving hand to neutral')
+        #gcode_editor.gcode_write_traj([halfpass[-1]], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0]) # using last coordinates
 
         # plotting halfpass
         plot_x = Lz
@@ -169,10 +169,13 @@ if __name__ == '__main__':
 
        # Inter-halfpass stuff
        ##################
-        current_theta += np.deg2rad(360+cfg.halfpass_shift)
+        #current_theta += np.deg2rad(360+cfg.halfpass_shift)
+        current_theta += np.deg2rad(720+cfg.halfpass_shift)
         
-        gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 360 + shift={cfg.halfpass_shift}')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0])
+        #gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 720 + shift={cfg.halfpass_shift}')
+        #gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0])
+        gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 720 + shift={cfg.halfpass_shift}')
+        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [cfg.fwd_orient])
         gcode_editor.gcode_write_comment(f'Moving hand to BWD position')
         gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [-cfg.fwd_orient])
 
@@ -201,11 +204,13 @@ if __name__ == '__main__':
 
         #print('angle entre HP1end et HP2start :',  get_angle(H1end, [0,0], [plot_y[-1], plot_z[-1]]))
 
-        gcode_editor.gcode_write_comment(f'Moving hand to neutral')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0]) # using last coordinates
-        current_theta += np.deg2rad(360)
-        gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
-        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0]) # Lz[0] cause we're at home
+        #gcode_editor.gcode_write_comment(f'Moving hand to neutral')
+        #gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0]) 
+        #current_theta += np.deg2rad(360)
+        #gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
+        current_theta += np.deg2rad(720)
+        gcode_editor.gcode_write_comment(f'Pass {i}, executing 720')
+        gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [-cfg.fwd_orient]) # Lz[0] cause we're at home
 
         # Preparing next pass
         ######################
@@ -216,8 +221,14 @@ if __name__ == '__main__':
 
 #        print('theta avant correction : ', np.rad2deg(current_theta)%360)
 #        print('diff angle :', 360 - np.rad2deg(current_theta - start_theta)%360)
-        current_theta += np.deg2rad(360) - np.deg2rad(np.rad2deg(current_theta - start_theta)%360) # catch up with pass starting point
+        print(f'theta before catch up = {np.rad2deg(current_theta)}')
+        catch_up = np.deg2rad(360 -  np.rad2deg(current_theta - start_theta)%360) # catch up with pass starting point
+        current_theta += catch_up
+        print(f'theta after catch up = {np.rad2deg(current_theta)}')
+        #print(f'catch_up = {np.rad2deg(catch_up)}')
         current_theta += np.deg2rad(pass_shift) # add shift
+        print(f'theta after shift = {np.rad2deg(current_theta)}')
+        #print(f'pass shift = {pass_shift}')
         gcode_editor.gcode_write_comment(f'Pass {i}, executing catch-up to start point AND pass_shift = {cfg.pass_shift}')
         gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0])
         #print('theta après correction : ', np.rad2deg(current_theta)%360)

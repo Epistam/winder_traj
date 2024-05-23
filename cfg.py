@@ -15,17 +15,17 @@ cyl_Z_offset = 0.
 # Fiber orientation (uncomment whichever mode is wanted)
 ####################
 # Orientation setting (X winding)
-orient = 45 # fiber orientation in degrees
+#orient = 30 # fiber orientation in degrees
 # Step setting (hoop winding)
-#filament_step = 100 # in mm
-#orient = np.rad2deg(np.arcsin(filament_step / (2*np.pi*R)))
+filament_step = 100 # in mm
+orient = np.rad2deg(np.arcsin(filament_step / (2*np.pi*R)))
 
 # legacy and wrong
 #orient = np.rad2deg(np.deg2rad(90)-np.arctan((2*np.pi*R)/filament_step))
 
 # Speeds / feeds
 ################
-carriage_speed = 30 # carriage speed acts a speed multiplicator applied to both omega and Vz, not changing their ratio
+carriage_speed = 20 # carriage speed acts a speed multiplicator applied to both omega and Vz, not changing their ratio
 om_func = lambda r : Vtan/r
 Vtan = np.tan(np.deg2rad(90-orient)) # Vtan(z) ; implicitely, Vz = 1mm/s
 
@@ -43,15 +43,16 @@ Vtan = np.tan(np.deg2rad(90-orient)) # Vtan(z) ; implicitely, Vz = 1mm/s
 # Winding parameters
 #####################
 halfpass_shift = 180 # shift (deg) between halfpass FWD and halfpass BWD
-pass_shift = 45 # shift en degrès à la fin de chaque passe
-#pass_count = 8 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
-pass_count = int(360/pass_shift) #automated calculation for rendering all passes
+#pass_shift = 45 # shift en degrès à la fin de chaque passe
+#pass_count = int(360/pass_shift) #automated calculation for rendering all passes
+pass_shift = 135
+pass_count = 8 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
 
-fwd_orient = 45
+fwd_orient = -45
 
 # Point density
 ################
-step = 3 # Z step between points in mm
+step = 10 # Z step between points in mm
 R_offset = 0
 
 # Gcode generation
