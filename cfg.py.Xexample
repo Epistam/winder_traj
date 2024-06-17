@@ -1,13 +1,10 @@
-from datetime import datetime
-
-
 import numpy as np
 
 # Tube / fairing parameters
 ######################
 # Mandrel settings
-L = 1900. # longueur en mm
-R = 125. # rayon en mm
+L = 820. # longueur en mm
+R = 80. # rayon en mm
 # Fairing settings (if applicable)
 C = .66 # paramètre de von Karman 
 
@@ -51,8 +48,8 @@ halfpass_shift = 180 # shift (deg) between halfpass FWD and halfpass BWD
 #pass_shift = 135
 #pass_count = 24 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
 #pass_shift = 180 - 360/pass_count
-pass_count = 80 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
-pass_shift = 360/80
+pass_count = 24 # number of passes to do. For optimal hoop results, use pass_count = int(360/pass_shift).
+pass_shift = 360/24
 
 fwd_orient = -45
 
@@ -63,7 +60,7 @@ R_offset = 0
 
 # Gcode generation
 ###################
-output_file = f'{datetime.today().strftime("%Y-%m-%d-%H:%M:%S")}_X_{pass_count}P_L{L}mm_R{R}mm.gcode'
+output_file = f'X_{pass_count}P_L{L}mm_R{R}mm.gcode'
 
 gcode_axis_theta = 'A'
 gcode_speed_omega = 'S'

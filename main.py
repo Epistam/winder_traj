@@ -170,11 +170,11 @@ if __name__ == '__main__':
        # Inter-halfpass stuff
        ##################
         #current_theta += np.deg2rad(360+cfg.halfpass_shift)
-        current_theta += np.deg2rad(720+cfg.halfpass_shift)
+        current_theta += np.deg2rad(360+cfg.halfpass_shift)
         
         #gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 720 + shift={cfg.halfpass_shift}')
         #gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [0])
-        gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 720 + shift={cfg.halfpass_shift}')
+        gcode_editor.gcode_write_comment(f'Pass {i}, executing halfpass 360 + shift={cfg.halfpass_shift}')
         gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [cfg.fwd_orient])
         gcode_editor.gcode_write_comment(f'Moving hand to BWD position')
         gcode_editor.gcode_write_traj([current_theta], [Lz[-1]], [Lr[-1]], [Lomega[-1]], [-cfg.fwd_orient])
@@ -199,8 +199,9 @@ if __name__ == '__main__':
         ax.scatter(plot_y[0], plot_z[0], plot_x[0], color='blue', s=50)
         ax.text(plot_y[0], plot_z[0], plot_x[0], f'HP{i}.2 start')
 
-        ax.scatter(plot_y[-1], plot_z[-1], plot_x[-1], color='orange', s=50)
-        ax.text(plot_y[-1], plot_z[-1], plot_x[-1], f'HP{i}.2 end')
+        # TODO 
+        #ax.scatter(plot_y[-1], plot_z[-1], plot_x[-1], color='orange', s=50)
+        #ax.text(plot_y[-1], plot_z[-1], plot_x[-1], f'HP{i}.2 end')
 
         #print('angle entre HP1end et HP2start :',  get_angle(H1end, [0,0], [plot_y[-1], plot_z[-1]]))
 
@@ -208,8 +209,8 @@ if __name__ == '__main__':
         #gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0]) 
         #current_theta += np.deg2rad(360)
         #gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
-        current_theta += np.deg2rad(720)
-        gcode_editor.gcode_write_comment(f'Pass {i}, executing 720')
+        current_theta += np.deg2rad(360)
+        gcode_editor.gcode_write_comment(f'Pass {i}, executing 360')
         gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [-cfg.fwd_orient]) # Lz[0] cause we're at home
 
         # Preparing next pass
@@ -225,10 +226,10 @@ if __name__ == '__main__':
         catch_up = np.deg2rad(360 -  np.rad2deg(current_theta - start_theta)%360) # catch up with pass starting point
         current_theta += catch_up
         print(f'theta after catch up = {np.rad2deg(current_theta)}')
-        #print(f'catch_up = {np.rad2deg(catch_up)}')
+        print(f'catch_up = {np.rad2deg(catch_up)}')
         current_theta += np.deg2rad(pass_shift) # add shift
         print(f'theta after shift = {np.rad2deg(current_theta)}')
-        #print(f'pass shift = {pass_shift}')
+        print(f'pass shift = {pass_shift}')
         gcode_editor.gcode_write_comment(f'Pass {i}, executing catch-up to start point AND pass_shift = {cfg.pass_shift}')
         gcode_editor.gcode_write_traj([current_theta], [Lz[0]], [Lr[-1]], [Lomega[-1]], [0])
         #print('theta après correction : ', np.rad2deg(current_theta)%360)
